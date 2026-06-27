@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="public/dot_auction.png" alt="Dot.Auction" width="280" />
+
 <h1>Dot.Auction</h1>
 
 <p>Real-time online auction platform — list items, place live bids, and win with confidence.</p>
