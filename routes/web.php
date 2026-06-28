@@ -15,6 +15,15 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        $userId = auth()->id();
+        $activeAuctions = \App\Models\Auction::where('seller_id', $userId)->where('status', 'active')->count();
+        $totalAuctions  = \App\Models\Auction::where('seller_id', $userId)->count();
+        $totalBids      = \App\Models\Bid::whereHas('auction', fn ($q) => $q->where('seller_id', $userId))->count();
+        $recentAuctions = \App\Models\Auction::where('seller_id', $userId)
+            ->with('category')->latest()->limit(8)->get();
+        $categories = \App\Models\AuctionCategory::withCount([
+            'auctions' => fn ($q) => $q->where('seller_id', $userId),
+        ])->get();
+        return view('dashboard', compact('activeAuctions', 'totalAuctions', 'totalBids', 'recentAuctions', 'categories'));
     })->name('dashboard');
 });
